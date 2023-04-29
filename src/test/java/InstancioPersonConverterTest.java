@@ -1,8 +1,11 @@
 import org.instancio.Instancio;
 import org.instancio.junit.InstancioExtension;
+import org.instancio.junit.InstancioSource;
 import org.instancio.junit.Seed;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +51,7 @@ class InstancioPersonConverterTest {
     }
 
     @Test
+    @Disabled("Intended to fail - Remove disabled if you want to see how instancio prints out seeds on failed tests")
     @Seed(1066875797028593003L) // reproduce failed run
     void convertFailPrintSeedTest() {
         // given
@@ -59,6 +63,14 @@ class InstancioPersonConverterTest {
         fail("this test should fail");
     }
 
-    // TODO: Impl param test example - see: https://www.instancio.org/user-guide/#arguments-source
+    @ParameterizedTest
+    @InstancioSource
+    void convertPersonTO2PersonViaParameterizedInput(PersonTO personTO) {
+        // given - now provided via InstancioSource
+        // when
+        Person person = personConverter.convertPersonTO2Person(personTO);
+        // then
+        assertThat(person).usingRecursiveComparison().isEqualTo(personTO);
+    }
 
 }
